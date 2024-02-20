@@ -1,2 +1,2 @@
-# HiPi
- Rarsperry Pi web server to control HiFi Receviers
+# TapePi
+Record audio from pc to cassette via AUX
