@@ -1,2 +1,2 @@
-# TapePi
-Record audio from pc to cassette via AUX
+# HiPi
+HiFi Controller/Server for RasPi
