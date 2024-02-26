@@ -1,0 +1,19 @@
+h1 {
+    color: aliceblue;
+}
+table {
+    border-color: black;
+    background-color:gold;
+}
+#title {
+    color: blue;
+}
+#song_title {
+    font-size: xx-large;
+}
+#artist {
+    font-size: x-large;
+}
+#album {
+    font-size: x-large;
+}

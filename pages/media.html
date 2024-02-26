@@ -1,21 +1,101 @@
 <!DOCTYPE html>
-<title>Media</title>
+<html>
+<head>
+    <title>Media Player</title>
+    <link href="/pages/styles/style.css" rel="stylesheet">
+</head>
 <body>
-    <h1>HiPi Media</h1>
-    <a href="/media/new">New File</a>
-<table>
-    <th>ID</th>
-    <th>Title</th>
-    <th>Artist</th>
-    <th>Album</th>
-    <th>Track</th>
-    %for row in rows:
-    <tr>
-        <td>{{row[0]}}</td>
-        <td>{{row[1]}}</td>
-        <td>{{row[2]}}</td>
-        <td>{{row[3]}}</td>
-    </tr>
-    %end
-</table>
+    <h1>HiPi Media Player</h1>
+    <table id="now_playing">
+        <th id="th_1">Now Playing</th>
+        <th></th>
+        <tr>
+            <td>SN</td>
+            <td id="np_title">No Data</td>
+        </tr>
+        <tr>
+            <td>AR</td>
+            <td id="np_artist">No Data</td>
+        </tr>
+        <tr>
+            <td>AL</td>
+            <td id="np_album">No Data<td>
+        </tr>
+        <tr>
+            <td id="APR"><audio id="audioPlayer" controls></audio></td>
+        </tr>
+        
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Track</th>
+                <th>File</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            % for row in rows:
+            <tr>
+                <td>{{row[0]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td>{{row[5]}}</td>
+                <td>
+                    <button id="btn_play" onclick="playAudio('{{row[2]}}', '{{row[3]}}', '{{row[5]}}','{{row[1]}}')">Play</button>
+                    <button id="btn_pause" onclick="togglePlayback()">Pause</button>
+                    <button id="btn_stop" onclick="stopAudio()">Stop</button>
+                    <button id="btn_edit">Edit</button>
+                </td>
+            </tr>
+            % end
+        </tbody>
+    </table>
+
+    
+
+    <script>
+        var audioPlayer = document.getElementById('audioPlayer');
+        var npTitle = document.getElementById('np_title');
+        var npArtist = document.getElementById('np_artist');
+        var npAlbum = document.getElementById('np_album');
+
+        var isPlaying = false;
+
+        function playAudio(artist, album, file, title) {
+            audioPlayer.src = '/media/music/' + artist + '/' + album + '/' + file;
+            audioPlayer.play();
+
+            isPlaying = true;
+            npTitle.innerText = title;
+            npArtist.innerText = artist;
+            npAlbum.innerText = album;
+        }
+        function stopAudio() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            isPlaying = false;
+            npTitle.innerText = '';
+            npArtist.innerText = '';
+            npAlbum.innerText = '';
+        }
+        function togglePlayback() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                document.querySelector('button').innerText = 'Play';
+            } else {
+                audioPlayer.play();
+                isPlaying = true;
+                document.querySelector('button').innerText = 'Pause';
+            }
+        }
+    </script>
 </body>
+</html>

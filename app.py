@@ -1,14 +1,30 @@
 from bottle import request, static_file, route, run, template, redirect
-from pytube import YouTube
 import socket
 import sqlite3
-import music_tag
 from tinytag import TinyTag
+from cli_color_py import magenta, blink, yellow, blue, red, bright_yellow, green, bold
 import os
+
+
 host=socket.gethostname()
 ip = socket.gethostbyname(host)
+
+print(blink(magenta("HIPI By Frostie Studios")))
+print(green("Server Starting"))
+print(green("ServerInfo"))
+print(bold(blue("HOST:")))
+print(blue(f"http://{(host)}:8080/"))
+
+print(bold(blue("IP:")))
+print(blue(ip))
 username = "matt"
+
+#Current Server
+current_server = "LOCAL"
+print()
 #directories
+
+CURR_DIR = ''
 MUSIC_DIR = 'media/music'
 VIDEO_DIR = 'media/video'
 TMP_DIR = 'media/tmp'
@@ -25,6 +41,21 @@ c = conn.cursor()
 def serve_static(filename):
     return static_file(filename,root='./pages/')
 
+@route('/media/music/<artist>/<album/<filename:path>')
+def play(filename):
+    return static_file(filename,root='./media/music/')
+
+@route('/media/play/<artist>/<album>/<file_name:path>')
+def play_audio(artist, album, file_name):
+    return '''
+    <audio controls autoplay>
+        <source src="/media/music/{}/{}/{}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    '''.format(artist, album, file_name)
+@route('/media/music/<filepath:path>')
+def serve_music(filepath):
+    return static_file(filepath, root=MUSIC_DIR)
 @route('/')
 def index():
     global username
@@ -48,12 +79,14 @@ def do_upload():
             tmp_file = os.path.join('tmp',uploaded_file.filename)
             uploaded_file.save(tmp_file)
             #Metadata Extract
+            fname = uploaded_file.filename
+            print(fname)
             tag = TinyTag.get(tmp_file)
             title = tag.title
             artist = tag.artist
             album = tag.album
             track = tag.track
-            print(title)
+            print(yellow(bold(title)))
             print(artist)
             print(album)
             
@@ -67,7 +100,7 @@ def do_upload():
 
                 if not existing_entry:
                     # Insert entry into the database
-                    c.execute("INSERT INTO music (title, artist, album, track) VALUES (?, ?, ?, ?)", (title, artist, album, track))
+                    c.execute("INSERT INTO music (title, artist, album, track, file) VALUES (?, ?, ?, ?, ?)", (title, artist, album, track, fname))
                     conn.commit()
                 #Sort Artist
                 artist_dir = os.path.join(MUSIC_DIR, artist)
@@ -93,26 +126,26 @@ def do_upload():
         redirect('/media')
     else:
         return "Unsuported Media"
+# Route to handle playing audio file
+# Route to handle playing audio file and processing form submission
 @route('/media')
 def media():
-    c.execute("SELECT id, title, artist, album, track FROM music")
+    print(bright_yellow("MEDIA"))
+    c.execute("SELECT id, title, artist, album, track, file FROM music")
     result = c.fetchall()
     conn.commit()
     output = template('pages/media.html', rows=result)
     return output
-@route('/download')
-def Download():
-    global yt_link
-    youtubeObject = YouTube(yt_link)
-    youtubeObject = youtubeObject.streams.get_audio_only(subtype='aac')
-    try:
-        youtubeObject.download()
-    except:
-        return ("Error")
-    print("Download Finished")
-    print(youtubeObject.title)
 
+@route('/settings')
+def settings():
+    print("Settings")
+    return("Settings")
+@route('/settings/newlocation')
+def new():
+    print(yellow("NEW LOCATION"))
 @route('/recorder')
 def recorder():
+    print(bright_yellow("REC"))
     return("Record")
 run(debug=True,reloader=True,host="localhost", port=8080)

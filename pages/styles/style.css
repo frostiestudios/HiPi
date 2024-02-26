@@ -1,0 +1,57 @@
+a {
+    color: green;
+}
+td {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+audio {
+    color: black;
+}
+h1 {
+    color: blue;
+    font-family: sans-serif;
+}
+table {
+    color: red;
+    border: 1px solid black;
+}
+th {
+    border: 1px solid black;
+    font-family: Arial;
+    font-weight: bolder;
+    color: white;
+    background-color: blue;
+}
+td:hover{
+    color: blue;
+}
+td {
+    border: 1px solid black;
+    background-color: white;
+}
+#btn_play {
+    color: white;
+    background-color: green;
+}
+#btn_stop {
+    color: white;
+    background-color: red;
+}
+#btn_edit {
+    color: white;
+    background-color: blue;
+}
+#APR {
+    column-span: 2;
+}
+#th_1 {
+    color: wheat;
+    font-family: Times;
+    width: 200px;
+    
+}
+#now_playing {
+    width: 500px;
+
+}
